@@ -398,7 +398,6 @@ MyMatrix<T> MyMatrix<T>::inverse() const
     }
     return ans;
 }
-
 template <typename T>
 MyMatrix<T> MyMatrix<T>::adjugate() const
 {
@@ -417,3 +416,7 @@ void MyMatrix<T>::print(std::ostream &os) const
         os << std::endl;
     }
 }
+
+// 显式实例化常用数值类型，避免模板分离编译造成的链接缺失
+template class MyMatrix<int>;
+template class MyMatrix<double>;

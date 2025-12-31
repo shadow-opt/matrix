@@ -1,5 +1,9 @@
-# 作业项目说明文档
-本项目实现了MyMatrix类，其支持操作：
+# 作业项目说明文档  
+---
+该repo为个人期末作业。
+[TOC]
+## 简介
+本项目实现了MyMatrix类(My_matrix lib)，其支持操作：
 (1)给定矩阵⼤⼩，初始化对应⼤⼩、元素全为0的矩阵。
 (2)将矩阵所有元素置零或置⼀。
 (3)将矩阵所有元素取负值。
@@ -12,3 +16,19 @@
 (10)求得矩阵的⾏列式。
 (11)判别可能出现的奇异矩阵和不合法运算，并输出对应错误信息。
 (12)输出当前矩阵内容。  
+
+## 项目结构
+
+- CMakeLists.txt：顶层build配置。
+- app/
+	- CMakeLists.txt：可执行程序(main)配置。
+	- main.cpp：示例入口，简单演示矩阵创建、加法、乘法、行列式与逆矩阵打印。
+- libs/
+	- my_matrix/
+		- CMakeLists.txt：lib配置。
+		- include/MyMatrix.h：矩阵模板类声明。
+		- src/MyMatrix.cpp：矩阵模板类实现。
+- tests/
+	- CMakeLists.txt：配置。
+	- doctest.h：测试框架。
+	- tests.cpp：单元测试，用 doctest 验证行列式、逆矩阵、加法与乘法。
