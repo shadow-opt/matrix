@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <stdexcept>
@@ -24,15 +25,15 @@ namespace hw
 
     public:
         MyMatrix();
-        MyMatrix(int col, int row);
-        MyMatrix(int col, int row, T initValue);
+        MyMatrix(int row, int col);
+        MyMatrix(int row, int col, T initValue);
         MyMatrix(const MyMatrix &other);
 
         int getColNum() const;
         int getRowNum() const;
         // 元素存取
-        T get(int col, int row) const;
-        void set(int col, int row, T value);
+        T get(int row, int col) const;
+        void set(int row, int col, T value);
 
         // 批量修改
         void fill(T value); // 支持全部置零或一
@@ -61,7 +62,7 @@ namespace hw
 
         // 转置
         MyMatrix<T> getTranspose() const;
-        // 余子式
+        // 代数余子式
         MyMatrix<T> minorMatrix() const;
 
         // 行列式

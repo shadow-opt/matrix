@@ -7,3 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(app)
 add_subdirectory(libs/my_matrix)
+
+enable_testing()
+add_subdirectory(tests)

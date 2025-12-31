@@ -1,5 +1,5 @@
 #include "MyMatrix.h"
-#include <vector>
+
 using std::vector;
 using namespace hw;
 
@@ -7,7 +7,7 @@ template <typename T>
 MyMatrix<T>::MyMatrix() : colNum(0), rowNum(0), data() {}
 
 template <typename T>
-MyMatrix<T>::MyMatrix(int col, int row) : colNum(col), rowNum(row), data(col, vector<T>(row, 0))
+MyMatrix<T>::MyMatrix(int row, int col) : colNum(col), rowNum(row), data(row, vector<T>(col, 0))
 {
     if (col <= 0 || row <= 0)
     {
@@ -16,7 +16,7 @@ MyMatrix<T>::MyMatrix(int col, int row) : colNum(col), rowNum(row), data(col, ve
 }
 
 template <typename T>
-MyMatrix<T>::MyMatrix(int col, int row, T initValue) : colNum(col), rowNum(row), data(col, vector<T>(row, initValue))
+MyMatrix<T>::MyMatrix(int row, int col, T initValue) : colNum(col), rowNum(row), data(row, vector<T>(col, initValue))
 {
     if (col <= 0 || row <= 0)
     {
@@ -34,10 +34,10 @@ template <typename T>
 int MyMatrix<T>::getRowNum() const { return rowNum; }
 
 template <typename T>
-T MyMatrix<T>::get(int col, int row) const { return data[col][row]; }
+T MyMatrix<T>::get(int row, int col) const { return data[row][col]; }
 
 template <typename T>
-void MyMatrix<T>::set(int col, int row, T value) { data[col][row] = value; }
+void MyMatrix<T>::set(int row, int col, T value) { data[row][col] = value; }
 
 template <typename T>
 void MyMatrix<T>::checkSizeSame(const MyMatrix<T> &other) const
@@ -59,7 +59,7 @@ void MyMatrix<T>::checkSquare() const
 template <typename T>
 void MyMatrix<T>::checkSizeMultiplicable(const MyMatrix<T> &other) const
 {
-    if (rowNum != other.colNum)
+    if (colNum != other.rowNum)
     {
         throw std::invalid_argument("矩阵尺寸不匹配，无法相乘");
     }
@@ -68,22 +68,22 @@ void MyMatrix<T>::checkSizeMultiplicable(const MyMatrix<T> &other) const
 template <typename T>
 void MyMatrix<T>::fill(T value)
 {
-    for (int c = 0; c < colNum; ++c)
+    for (int r = 0; r < rowNum; ++r)
     {
-        for (int r = 0; r < rowNum; ++r)
+        for (int c = 0; c < colNum; ++c)
         {
-            data[c][r] = value;
+            data[r][c] = value;
         }
     }
 }
 template <typename T>
 void MyMatrix<T>::negate()
 {
-    for (int c = 0; c < colNum; ++c)
+    for (int r = 0; r < rowNum; ++r)
     {
-        for (int r = 0; r < rowNum; ++r)
+        for (int c = 0; c < colNum; ++c)
         {
-            data[c][r] = -data[c][r];
+            data[r][c] = -data[r][c];
         }
     }
 }
@@ -91,12 +91,12 @@ template <typename T>
 MyMatrix<T> MyMatrix<T>::operator+(const MyMatrix<T> &other) const
 {
     checkSizeSame(other);
-    MyMatrix<T> result(colNum, rowNum);
-    for (int c = 0; c < colNum; ++c)
+    MyMatrix<T> result(rowNum, colNum);
+    for (int r = 0; r < rowNum; ++r)
     {
-        for (int r = 0; r < rowNum; ++r)
+        for (int c = 0; c < colNum; ++c)
         {
-            result.data[c][r] = data[c][r] + other.data[c][r];
+            result.data[r][c] = data[r][c] + other.data[r][c];
         }
     }
     return result;
@@ -105,12 +105,12 @@ template <typename T>
 MyMatrix<T> MyMatrix<T>::operator-(const MyMatrix<T> &other) const
 {
     checkSizeSame(other);
-    MyMatrix<T> result(colNum, rowNum);
-    for (int c = 0; c < colNum; ++c)
+    MyMatrix<T> result(rowNum, colNum);
+    for (int r = 0; r < rowNum; ++r)
     {
-        for (int r = 0; r < rowNum; ++r)
+        for (int c = 0; c < colNum; ++c)
         {
-            result.data[c][r] = data[c][r] - other.data[c][r];
+            result.data[r][c] = data[r][c] - other.data[r][c];
         }
     }
     return result;
@@ -119,17 +119,17 @@ template <typename T>
 MyMatrix<T> MyMatrix<T>::operator*(const MyMatrix<T> &other) const
 {
     checkSizeMultiplicable(other);
-    MyMatrix<T> result(other.colNum, rowNum);
-    for (int c = 0; c < other.colNum; ++c)
+    MyMatrix<T> result(rowNum, other.colNum);
+    for (int r = 0; r < rowNum; ++r)
     {
-        for (int r = 0; r < rowNum; ++r)
+        for (int c = 0; c < other.colNum; ++c)
         {
             T sum = 0;
             for (int k = 0; k < colNum; ++k)
             {
-                sum += data[k][r] * other.data[c][k];
+                sum += data[r][k] * other.data[k][c];
             }
-            result.data[c][r] = sum;
+            result.data[r][c] = sum;
         }
     }
     return result;
@@ -138,12 +138,12 @@ MyMatrix<T> MyMatrix<T>::operator*(const MyMatrix<T> &other) const
 template <typename T>
 MyMatrix<T> MyMatrix<T>::operator*(T scalar) const
 {
-    MyMatrix<T> result(colNum, rowNum);
-    for (int c = 0; c < colNum; ++c)
+    MyMatrix<T> result(rowNum, colNum);
+    for (int r = 0; r < rowNum; ++r)
     {
-        for (int r = 0; r < rowNum; ++r)
+        for (int c = 0; c < colNum; ++c)
         {
-            result.data[c][r] = data[c][r] * scalar;
+            result.data[r][c] = data[r][c] * scalar;
         }
     }
     return result;
@@ -186,10 +186,7 @@ void MyMatrix<T>::swapRows(int r1, int r2)
     {
         throw std::out_of_range("行索引越界");
     }
-    for (int c = 0; c < colNum; ++c)
-    {
-        std::swap(data[c][r1], data[c][r2]);
-    }
+    swap(data[r1], data[r2]);
 }
 
 template <typename T>
@@ -201,7 +198,7 @@ void MyMatrix<T>::scaleRow(int r, T k)
     }
     for (int c = 0; c < colNum; ++c)
     {
-        data[c][r] *= k;
+        data[r][c] *= k;
     }
 }
 template <typename T>
@@ -213,7 +210,7 @@ void MyMatrix<T>::addRowMultiple(int target, int source, T k)
     }
     for (int c = 0; c < colNum; ++c)
     {
-        data[c][target] += k * data[c][source];
+        data[target][c] += k * data[source][c];
     }
 }
 template <typename T>
@@ -223,7 +220,10 @@ void MyMatrix<T>::swapCols(int c1, int c2)
     {
         throw std::out_of_range("列索引越界");
     }
-    std::swap(data[c1], data[c2]);
+    for (int r = 0; r < rowNum; ++r)
+    {
+        std::swap(data[r][c1], data[r][c2]);
+    }
 }
 template <typename T>
 void MyMatrix<T>::scaleCol(int c, T k)
@@ -234,7 +234,7 @@ void MyMatrix<T>::scaleCol(int c, T k)
     }
     for (int r = 0; r < rowNum; ++r)
     {
-        data[c][r] *= k;
+        data[r][c] *= k;
     }
 }
 template <typename T>
@@ -246,18 +246,18 @@ void MyMatrix<T>::addColMultiple(int target, int source, T k)
     }
     for (int r = 0; r < rowNum; ++r)
     {
-        data[target][r] += k * data[source][r];
+        data[r][target] += k * data[r][source];
     }
 }
 template <typename T>
 MyMatrix<T> MyMatrix<T>::getTranspose() const
 {
-    MyMatrix<T> result(rowNum, colNum);
-    for (int c = 0; c < colNum; ++c)
+    MyMatrix<T> result(colNum, rowNum);
+    for (int r = 0; r < rowNum; ++r)
     {
-        for (int r = 0; r < rowNum; ++r)
+        for (int c = 0; c < colNum; ++c)
         {
-            result.data[r][c] = data[c][r];
+            result.data[c][r] = data[r][c];
         }
     }
     return result;
@@ -266,28 +266,28 @@ template <typename T>
 MyMatrix<T> MyMatrix<T>::minorMatrix() const
 {
     checkSquare();
-    MyMatrix<T> result(colNum, rowNum);
-    for (int c = 0; c < colNum; ++c)
+    MyMatrix<T> result(rowNum, colNum);
+    for (int r = 0; r < rowNum; ++r)
     {
-        for (int r = 0; r < rowNum; ++r)
+        for (int c = 0; c < colNum; ++c)
         {
             // 计算余子式
-            MyMatrix<T> subMatrix(colNum - 1, rowNum - 1);
-            for (int sc = 0; sc < colNum; ++sc)
+            MyMatrix<T> subMatrix(rowNum - 1, colNum - 1);
+            for (int sr = 0; sr < rowNum; ++sr)
             {
-                if (sc == c)
+                if (sr == r)
                     continue;
-                for (int sr = 0; sr < rowNum; ++sr)
+                for (int sc = 0; sc < colNum; ++sc)
                 {
-                    if (sr == r)
+                    if (sc == c)
                         continue;
-                    int destC = sc < c ? sc : sc - 1;
                     int destR = sr < r ? sr : sr - 1;
-                    subMatrix.data[destC][destR] = data[sc][sr];
+                    int destC = sc < c ? sc : sc - 1;
+                    subMatrix.data[destR][destC] = data[sr][sc];
                 }
             }
             T det = subMatrix.determinant();
-            result.data[c][r] = ((c + r) % 2 == 0) ? det : -det;
+            result.data[r][c] = ((c + r) % 2 == 0) ? det : -det;
         }
     }
     return result;
@@ -297,7 +297,7 @@ template <typename T>
 T MyMatrix<T>::determinant() const
 {
     checkSquare();
-    int n = colNum;
+    int n = rowNum;
     MyMatrix<T> temp(*this);
     T det = 1;
     for (int i = 0; i < n; ++i)
@@ -306,12 +306,12 @@ T MyMatrix<T>::determinant() const
         int pivotRow = i;
         for (int r = i + 1; r < n; ++r)
         {
-            if (std::abs(temp.data[i][r]) > std::abs(temp.data[i][pivotRow]))
+            if (std::abs(temp.data[r][i]) > std::abs(temp.data[pivotRow][i]))
             {
                 pivotRow = r;
             }
         }
-        if (std::abs(temp.data[i][pivotRow]) < 1e-10)
+        if (std::abs(temp.data[pivotRow][i]) < 1e-10)
         {
             return 0; // 矩阵奇异，行列式为零
         }
@@ -324,10 +324,10 @@ T MyMatrix<T>::determinant() const
         // 消元
         for (int r = i + 1; r < n; ++r)
         {
-            T factor = temp.data[i][r] / temp.data[i][i];
+            T factor = temp.data[r][i] / temp.data[i][i];
             for (int c = i; c < n; ++c)
             {
-                temp.data[c][r] -= factor * temp.data[c][i];
+                temp.data[r][c] -= factor * temp.data[i][c];
             }
         }
     }
@@ -337,15 +337,15 @@ template <typename T>
 MyMatrix<T> MyMatrix<T>::inverse() const
 {
     checkSquare();
-    int n = colNum;
+    int n = rowNum;
     MyMatrix<T> augmented(n, n * 2);
-    // 构造增广矩阵
-    for (int c = 0; c < n; ++c)
+    // 构造增广矩阵 [A | I]
+    for (int r = 0; r < n; ++r)
     {
-        for (int r = 0; r < n; ++r)
+        for (int c = 0; c < n; ++c)
         {
-            augmented.data[c][r] = data[c][r];
-            augmented.data[c][r + n] = (c == r) ? 1 : 0;
+            augmented.data[r][c] = data[r][c];
+            augmented.data[r][c + n] = (c == r) ? 1 : 0;
         }
     }
     // 高斯-约旦消元法
@@ -355,12 +355,12 @@ MyMatrix<T> MyMatrix<T>::inverse() const
         int pivotRow = i;
         for (int r = i + 1; r < n; ++r)
         {
-            if (std::abs(augmented.data[i][r]) > std::abs(augmented.data[i][pivotRow]))
+            if (std::abs(augmented.data[r][i]) > std::abs(augmented.data[pivotRow][i]))
             {
                 pivotRow = r;
             }
         }
-        if (std::abs(augmented.data[i][pivotRow]) < 1e-10)
+        if (std::abs(augmented.data[pivotRow][i]) < 1e-10)
         {
             throw std::runtime_error("矩阵不可逆");
         }
@@ -372,37 +372,39 @@ MyMatrix<T> MyMatrix<T>::inverse() const
         T pivotValue = augmented.data[i][i];
         for (int c = 0; c < n * 2; ++c)
         {
-            augmented.data[c][i] /= pivotValue;
+            augmented.data[i][c] /= pivotValue;
         }
         // 消去其他行
         for (int r = 0; r < n; ++r)
         {
             if (r != i)
             {
-                T factor = augmented.data[i][r];
+                T factor = augmented.data[r][i];
                 for (int c = 0; c < n * 2; ++c)
                 {
-                    augmented.data[c][r] -= factor * augmented.data[c][i];
+                    augmented.data[r][c] -= factor * augmented.data[i][c];
                 }
             }
         }
     }
     // 提取逆矩阵
     MyMatrix<T> ans(n, n);
-    for (int c = 0; c < n; ++c)
+    for (int r = 0; r < n; ++r)
     {
-        for (int r = 0; r < n; ++r)
+        for (int c = 0; c < n; ++c)
         {
-            ans.data[c][r] = augmented.data[c][r + n];
+            ans.data[r][c] = augmented.data[r][c + n];
         }
     }
     return ans;
 }
+
 template <typename T>
 MyMatrix<T> MyMatrix<T>::adjugate() const
 {
     return this->minorMatrix().getTranspose();
 }
+
 template <typename T>
 void MyMatrix<T>::print(std::ostream &os) const
 {
@@ -410,7 +412,7 @@ void MyMatrix<T>::print(std::ostream &os) const
     {
         for (int c = 0; c < colNum; ++c)
         {
-            os << std::setw(10) << data[c][r] << " ";
+            os << std::setw(10) << data[r][c] << " ";
         }
         os << std::endl;
     }
