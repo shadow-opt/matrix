@@ -1,7 +1,13 @@
 # 作业项目说明文档  
 ---
 该repo为个人期末作业。
-[TOC]
+- [作业项目说明文档](#--------)
+  * [简介](#--)
+  * [项目结构](#----)
+  * [构建与运行](#-----)
+
+(github竟然不支持[TOC])
+
 ## 简介
 本项目实现了MyMatrix类(My_matrix lib)，其支持操作：
 (1)给定矩阵⼤⼩，初始化对应⼤⼩、元素全为0的矩阵。
@@ -32,3 +38,24 @@
 	- CMakeLists.txt：配置。
 	- doctest.h：测试框架。
 	- tests.cpp：单元测试，用 doctest 验证行列式、逆矩阵、加法与乘法。
+
+## 构建与运行
+1. 安装 CMake 和支持的编译器（如 g++ 或 MSVC）。
+2. 在项目根目录下创建构建目录并进入：
+   ```bash
+   mkdir build
+   cd build
+   ```
+3. 运行 CMake 生成构建文件：
+    ```bash
+    cmake ..
+    ```
+4. 编译项目：
+    ```bash
+    cmake --build .
+    ```
+5. 运行可执行文件（在 build/app 目录下的 main）：
+    ```bash
+    ./build/app/main
+    ```
+- windows 下为`main.exe`
